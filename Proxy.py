@@ -221,6 +221,20 @@ while True:
 
       # Send the response to the client
       # ~~~~ INSERT CODE ~~~~
+      if web_response_bytes:
+          browser_socket.sendall(web_response_bytes)
+      else:
+          # if there is a error
+          error_response = (
+              "HTTP/1.1 502 Bad Gateway\r\n"
+              "Content-Type: text/html\r\n"
+              "Connection: close\r\n"
+              "\r\n"
+              "<html><body><h1>502 Bad Gateway</h1>"
+              "<p>The proxy server received an invalid response from the upstream server.</p>"
+              "</body></html>"
+          )
+          browser_socket.sendall(error_response.encode())
       # ~~~~ END CODE INSERT ~~~~
 
       # Create a new file in the cache for the requested file.
