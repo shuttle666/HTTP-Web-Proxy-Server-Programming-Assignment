@@ -74,7 +74,7 @@ while True:
   # and store it in the variable: message_bytes
   # ~~~~ INSERT CODE ~~~~
   # The recv() method reads data from the connected socket with a parameter specifying the maximum number of bytes to be read at a time. 4096 = 4KB.
-    message_bytes = b""
+  message_bytes = b""
   while True:
       chunk = browser_socket.recv(4096)
       message_bytes += chunk
@@ -196,7 +196,7 @@ while True:
         print ('> ' + line)
 
       try:
-        originServerSocket.sendall(request.encode())
+        origin_socket.sendall(request.encode())
       except socket.error:
         print ('Forward request to origin failed')
         sys.exit()
@@ -246,20 +246,28 @@ while True:
 
       # Save origin server response in the cache file
       # ~~~~ INSERT CODE ~~~~
+      # 从原始服务器接收到的响应保存到本地缓存文件
+      if web_response_bytes.startswith(b"HTTP/1.1 200"):  # 只缓存成功响应
+        try:
+
+            cacheFile.write(web_response_bytes)
+            print(f"已缓存资源到 {cacheLocation}")
+        except Exception as e:
+            print(f"缓存写入失败: {str(e)}")
       # ~~~~ END CODE INSERT ~~~~
       cacheFile.close()
       print ('cache file closed')
 
       # finished communicating with origin server - shutdown socket writes
       print ('origin response received. Closing sockets')
-      originServerSocket.close()
+      origin_socket.close()
        
-      clientSocket.shutdown(socket.SHUT_WR)
+      browser_socket.shutdown(socket.SHUT_WR)
       print ('client socket shutdown for writing')
     except OSError as err:
       print ('origin server request failed. ' + err.strerror)
 
   try:
-    clientSocket.close()
+    browser_socket.close()
   except:
     print ('Failed to close client socket')
