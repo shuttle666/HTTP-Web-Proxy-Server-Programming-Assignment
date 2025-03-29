@@ -20,7 +20,7 @@ proxyPort = int(args.port)
 try:
   # Create a server socket
   # ~~~~ INSERT CODE ~~~~
-
+  serverSocket = socket()
   # ~~~~ END CODE INSERT ~~~~
   print ('Created socket')
 except:
@@ -30,6 +30,7 @@ except:
 try:
   # Bind the the server socket to a host and port
   # ~~~~ INSERT CODE ~~~~
+
   # ~~~~ END CODE INSERT ~~~~
   print ('Port is bound')
 except:
