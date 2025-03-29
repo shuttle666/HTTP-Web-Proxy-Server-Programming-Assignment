@@ -73,7 +73,6 @@ while True:
   # Get HTTP request from client
   # and store it in the variable: message_bytes
   # ~~~~ INSERT CODE ~~~~
-
   # The recv() method reads data from the connected socket with a parameter specifying the maximum number of bytes to be read at a time. 4096 = 4KB.
     message_bytes = b""
   while True:
@@ -83,6 +82,7 @@ while True:
       if b"\r\n\r\n" in message_bytes or not chunk:
           break
   # ~~~~ END CODE INSERT ~~~~
+
   message = message_bytes.decode('utf-8')
   print ('Received request:')
   print ('< ' + message)
@@ -134,6 +134,11 @@ while True:
     # ProxyServer finds a cache hit
     # Send back response to client 
     # ~~~~ INSERT CODE ~~~~
+    cached_response = ''.join(cacheData)
+    # Make sure HTTP response header
+    if not cached_response.startswith("HTTP/"):
+        cached_response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n" + cached_response
+    browser_socket.sendall(cached_response.encode())
     # ~~~~ END CODE INSERT ~~~~
     cacheFile.close()
     print ('Sent to the client:')
@@ -144,6 +149,7 @@ while True:
     # Create a socket to connect to origin server
     # and store in originServerSocket
     # ~~~~ INSERT CODE ~~~~
+
     # ~~~~ END CODE INSERT ~~~~
 
     print ('Connecting to:\t\t' + hostname + '\n')
@@ -162,6 +168,7 @@ while True:
       # originServerRequest is the first line in the request and
       # originServerRequestHeader is the second line in the request
       # ~~~~ INSERT CODE ~~~~
+
       # ~~~~ END CODE INSERT ~~~~
 
       # Construct the request to send to the origin server
