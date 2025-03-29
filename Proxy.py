@@ -149,7 +149,10 @@ while True:
     # Create a socket to connect to origin server
     # and store in originServerSocket
     # ~~~~ INSERT CODE ~~~~
-
+    #  为命中时,原始服务器获取资源
+    origin_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # 设置连接超时，避免无限等待
+    origin_socket.settimeout(10)
     # ~~~~ END CODE INSERT ~~~~
 
     print ('Connecting to:\t\t' + hostname + '\n')
@@ -158,6 +161,8 @@ while True:
       address = socket.gethostbyname(hostname)
       # Connect to the origin server
       # ~~~~ INSERT CODE ~~~~
+      web_server_port = 80
+      origin_socket.connect((address, web_server_port))
       # ~~~~ END CODE INSERT ~~~~
       print ('Connected to origin Server')
 
