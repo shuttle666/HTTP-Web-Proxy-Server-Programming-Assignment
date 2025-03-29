@@ -21,7 +21,8 @@ try:
   # Create a server socket
   # ~~~~ INSERT CODE ~~~~
   # socket.AF_INET = ipv4
-  serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+  # socket.SOCK_STREAM = TCP 
+  proxy_server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   # ~~~~ END CODE INSERT ~~~~
   print ('Created socket')
 except:
@@ -32,7 +33,8 @@ try:
   # Bind the the server socket to a host and port
   # ~~~~ INSERT CODE ~~~~
   # Bind to the specified host IP address and port
-  serverSocket.bind((proxyHost, proxyPort))
+  # bind(host, port)
+  proxy_server_socket.bind((proxyHost, proxyPort))
   # ~~~~ END CODE INSERT ~~~~
   print ('Port is bound')
 except:
@@ -43,7 +45,7 @@ try:
   # Listen on the server socket
   # ~~~~ INSERT CODE ~~~~
   # Start listening
-  serverSocket.listen(5)
+  proxy_server_socket.listen(10)
   # ~~~~ END CODE INSERT ~~~~
   print ('Listening to socket')
 except:
@@ -58,7 +60,10 @@ while True:
   # Accept connection from client and store in the clientSocket
   try:
     # ~~~~ INSERT CODE ~~~~
-    clientSocket, addr = serverSocket.accept()
+    # Start to accept connection
+
+    # browser_socket = New socket object,  client_address : Client address information
+    browser_socket, client_address = proxy_server_socket.accept()
     # ~~~~ END CODE INSERT ~~~~
     print ('Received a connection')
   except:
@@ -68,6 +73,15 @@ while True:
   # Get HTTP request from client
   # and store it in the variable: message_bytes
   # ~~~~ INSERT CODE ~~~~
+
+  # The recv() method reads data from the connected socket with a parameter specifying the maximum number of bytes to be read at a time. 4096 = 4KB.
+    message_bytes = b""
+  while True:
+      chunk = browser_socket.recv(4096)
+      message_bytes += chunk
+      # HTTP请求通常以空行结束
+      if b"\r\n\r\n" in message_bytes or not chunk:
+          break
   # ~~~~ END CODE INSERT ~~~~
   message = message_bytes.decode('utf-8')
   print ('Received request:')
