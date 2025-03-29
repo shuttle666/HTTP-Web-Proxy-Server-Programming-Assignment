@@ -173,7 +173,18 @@ while True:
       # originServerRequest is the first line in the request and
       # originServerRequestHeader is the second line in the request
       # ~~~~ INSERT CODE ~~~~
-
+      # 请求行
+      web_request_line = f"{method} {resource} HTTP/1.1"
+      # 构造基本请求头
+      web_request_headers = [
+          f"Host: {hostname}",
+          "Connection: close",  # 完成响应后关闭连接
+          "User-Agent: Python-Proxy/1.0", 
+      ]
+      # 合并为字符串
+      web_request_header_str = "\r\n".join(web_request_headers)
+      originServerRequest = web_request_line
+      originServerRequestHeader = web_request_header_str
       # ~~~~ END CODE INSERT ~~~~
 
       # Construct the request to send to the origin server
@@ -194,6 +205,18 @@ while True:
 
       # Get the response from the origin server
       # ~~~~ INSERT CODE ~~~~
+      web_response_bytes = b""
+      while True:
+          try:
+              # 使用8KB的块大小
+              data_chunk = origin_socket.recv(8192)
+               # 如果没有更多数据，退出循环
+              if not data_chunk:
+                break
+              web_response_bytes += data_chunk
+          except socket.timeout:
+              print("接收超时，可能是部分响应")
+              break
       # ~~~~ END CODE INSERT ~~~~
 
       # Send the response to the client
