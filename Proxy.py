@@ -137,7 +137,7 @@ while True:
     cached_response = ''.join(cacheData)
     # Make sure HTTP response header
     if not cached_response.startswith("HTTP/"):
-        cached_response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n" + cached_response
+      cached_response = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n" + cached_response
     browser_socket.sendall(cached_response.encode())
     # ~~~~ END CODE INSERT ~~~~
     cacheFile.close()
@@ -215,7 +215,7 @@ while True:
                 break
               web_response_bytes += data_chunk
           except socket.timeout:
-              print("接收超时，可能是部分响应")
+              print("Receive timeout")
               break
       # ~~~~ END CODE INSERT ~~~~
 
@@ -251,9 +251,9 @@ while True:
         try:
 
             cacheFile.write(web_response_bytes)
-            print(f"已缓存资源到 {cacheLocation}")
+            print(f"Resources have been cached to {cacheLocation}")
         except Exception as e:
-            print(f"缓存写入失败: {str(e)}")
+            print(f"Cache write failure: {str(e)}")
       # ~~~~ END CODE INSERT ~~~~
       cacheFile.close()
       print ('cache file closed')
